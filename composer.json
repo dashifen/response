@@ -1,0 +1,24 @@
+{
+	"name": "dashifen/response",
+	"description": "an encapsulation of a HTTP response",
+	"minimum-stability": "stable",
+	"type": "library",
+	"authors": [
+		{
+			"name": "David Dashifen Kees",
+			"email": "dashifen@dashifen.com",
+			"homepage": "https://dashifen.com",
+			"role": "developer"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Dashifen\\Response\\": "src/"
+		}
+	},
+	"require": {
+		"php": "^7.1",
+		"zendframework/zend-diactoros": "^1.4"
+	},
+	"license": "MIT"
+}
