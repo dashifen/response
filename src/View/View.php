@@ -34,6 +34,22 @@ class View implements ViewInterface {
 	protected $compiled = false;
 	
 	/**
+	 * View constructor.
+	 *
+	 * @param string $header
+	 * @param string $footer
+	 * @param string $content
+	 */
+	public function __construct(string $header, string $footer, string $content = "") {
+		$this->setHeader($header);
+		$this->setFooter($footer);
+		
+		if (!empty($content)) {
+			$this->setContent($content);
+		}
+	}
+	
+	/**
 	 * @param string $content
 	 * @param array  $data
 	 * @param string $pattern
