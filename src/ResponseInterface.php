@@ -67,6 +67,16 @@ interface ResponseInterface {
 	public function setView(ViewInterface $view): void;
 	
 	/**
+	 * sets the appropriate type and data for a redirection
+	 *
+	 * @param string $url;
+	 *
+	 * @return void
+	 * @throws ResponseException
+	 */
+	public function redirect(string $url): void;
+	
+	/**
 	 * @return bool
 	 */
 	public function isComplete(): bool;

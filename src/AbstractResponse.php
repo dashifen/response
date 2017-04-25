@@ -261,6 +261,22 @@ abstract class AbstractResponse implements ResponseInterface {
 	}
 	
 	/**
+	 * sets the appropriate type and data for a redirection
+	 *
+	 * @param string $url
+	 *
+	 * @throws ResponseException
+	 */
+	public function redirect(string $url): void {
+		if (!filter_var($url, FILTER_VALIDATE_URL)) {
+			throw new ResponseException("Invalid URL: $url", ResponseException::INVALID_URL);
+		}
+		
+		$this->setType("redirect");
+		$this->data["url"] = $url;
+	}
+	
+	/**
 	 * @return bool
 	 */
 	public function isCompiled(): bool {
@@ -303,21 +319,29 @@ abstract class AbstractResponse implements ResponseInterface {
 			return false;
 		}
 		
-		// now, if we have those, the other thing we want to be sure
-		// of is that our data includes the information that our view
-		// needs in order to compile our response.
+		if ($this->type !== "redirect") {
+			
+			// for our responses that aren't redirections, then we'll want
+			// to be sure that we have all the data that our view expects.
+			
+			$keys = array_keys($this->data);
+			$prerequisites = $this->view->getPrerequisites();
+			$difference = array_diff($prerequisites, $keys);
+			
+			// array_diff() returns an array of items in $prerequisites
+			// that are not found in $keys.  if $keys has extra information,
+			// that's fine, but if it lacks anything in our $prerequisites
+			// then we're not complete.  so, if the resulting $difference is
+			// zero, then we can return true.
+			
+			return sizeof($difference) === 0;
+		}
 		
-		$keys = array_keys($this->data);
-		$prerequisites = $this->view->getPrerequisites();
-		$difference = array_diff($prerequisites, $keys);
+		// if we're still executing this method, then we must be redirecting.
+		// in this case, the only data we need is a url.  if we have it, and if
+		// it appears to be valid, we'll be good to go.
 		
-		// array_diff() returns an array of items in $prerequisites
-		// that are not found in $keys.  if $keys has extra information,
-		// that's fine, but if it lacks anything in our $prerequisites
-		// then we're not complete.  so, if the resulting $difference is
-		// zero, then we can return true.
-		
-		return sizeof($difference) === 0;
+		return isset($this->data["url"]) && filter_var($this->data["url"], FILTER_VALIDATE_URL);
 	}
 	
 	/**
@@ -333,7 +357,10 @@ abstract class AbstractResponse implements ResponseInterface {
 			throw new ResponseException("Attempt to compile incomplete response.", ResponseException::AFTER_COMPILE_ALTERATION);
 		}
 		
-		$content = $this->view->compile($this->data);
+		$content = $this->type !== "redirect"
+			? $this->view->compile($this->data)
+			: $this->data["url"];
+		
 		$this->response = $this->newResponse($content, $this->statusCode);
 		$this->compiled = true;
 	}

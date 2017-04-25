@@ -9,7 +9,8 @@ class ResponseException extends \Exception {
 	public const INCOMPLETE_COMPILATION = 2;
 	public const UNKNOWN_RESPONSE_TYPE  = 3;
 	public const RECOMPILATION = 4;
-	public const UNKNOWN_ERROR = 5;
+	public const INVALID_URL   = 5;
+	public const UNKNOWN_ERROR = 6;
 	
 	public function __construct($message = "", $code = 0, Throwable $previous = null) {
 		$reflection = new \ReflectionClass(__CLASS__);
