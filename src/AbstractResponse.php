@@ -164,13 +164,13 @@ abstract class AbstractResponse implements ResponseInterface {
 	 */
 	public function setType(string $type): void {
 		if ($this->compiled) {
-			throw new ResponseException("Attempt to alter response after compilation.");
+			throw new ResponseException("Attempt to alter response after compilation.", ResponseException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		$type = strtolower($type);
 		
 		if (!in_array($type, ["html", "json", "text", "redirect"])) {
-			throw new ResponseException("Unexpected response type: $type.");
+			throw new ResponseException("Unexpected response type: $type.", ResponseException::UNKNOWN_RESPONSE_TYPE);
 		}
 		
 		$this->type = $type;
@@ -191,7 +191,7 @@ abstract class AbstractResponse implements ResponseInterface {
 	 */
 	public function setStatusCode(int $statusCode): void {
 		if ($this->compiled) {
-			throw new ResponseException("Attempt to alter response after compilation.");
+			throw new ResponseException("Attempt to alter response after compilation.", ResponseException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		if (!in_array($statusCode, array_keys($this->phrases))) {
@@ -209,7 +209,7 @@ abstract class AbstractResponse implements ResponseInterface {
 	 */
 	public function setData(array $data): void {
 		if ($this->compiled) {
-			throw new ResponseException("Attempt to alter response after compilation.");
+			throw new ResponseException("Attempt to alter response after compilation.", ResponseException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		// it might appear, at first, that we could simply set
@@ -233,7 +233,7 @@ abstract class AbstractResponse implements ResponseInterface {
 	 */
 	public function setDatum(string $index, $datum): void {
 		if ($this->compiled) {
-			throw new ResponseException("Attempt to alter response after compilation.");
+			throw new ResponseException("Attempt to alter response after compilation.", ResponseException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		$this->data[$index] = $datum;
@@ -254,7 +254,7 @@ abstract class AbstractResponse implements ResponseInterface {
 	 */
 	public function setView(ViewInterface $view): void {
 		if ($this->compiled) {
-			throw new ResponseException("Attempt to alter response after compilation.");
+			throw new ResponseException("Attempt to alter response after compilation.", ResponseException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		$this->view = $view;
@@ -273,7 +273,7 @@ abstract class AbstractResponse implements ResponseInterface {
 	 */
 	public function send(): void {
 		if (!$this->isComplete()) {
-			throw new ResponseException("Attempt to send incomplete response.");
+			throw new ResponseException("Attempt to send incomplete response.", ResponseException::INCOMPLETE_COMPILATION);
 		}
 		
 		// in a perfect world, the programmer would always compile
@@ -326,11 +326,11 @@ abstract class AbstractResponse implements ResponseInterface {
 	 */
 	public function compile(): void {
 		if ($this->compiled) {
-			throw new ResponseException("Attempt to recompile response.");
+			throw new ResponseException("Attempt to recompile response.", ResponseException::RECOMPILATION);
 		}
 		
 		if (!$this->isComplete()) {
-			throw new ResponseException("Attempt to compile incomplete response.");
+			throw new ResponseException("Attempt to compile incomplete response.", ResponseException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		$content = $this->view->compile($this->data);

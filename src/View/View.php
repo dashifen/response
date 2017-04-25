@@ -122,7 +122,7 @@ class View implements ViewInterface {
 	 */
 	public function setData(array $data): void {
 		if ($this->compiled) {
-			throw new ViewException("Attempt to alter view after compilation.");
+			throw new ViewException("Attempt to alter view after compilation.", ViewException::AFTER_COMPILE_ALTERATION);
 		}
 		// to avoid overwriting any data that has already been set
 		// using setDatum(), we don't want to do a simple assignment.
@@ -143,7 +143,7 @@ class View implements ViewInterface {
 	 */
 	public function setDatum(string $index, $datum): void {
 		if ($this->compiled) {
-			throw new ViewException("Attempt to alter view after compilation.");
+			throw new ViewException("Attempt to alter view after compilation.", ViewException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		$this->data[$index] = $datum;
@@ -157,7 +157,7 @@ class View implements ViewInterface {
 	 */
 	public function setHeader(string $header): void {
 		if ($this->compiled) {
-			throw new ViewException("Attempt to alter view after compilation.");
+			throw new ViewException("Attempt to alter view after compilation.", ViewException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		// $header can be either a file or a string containing the
@@ -176,7 +176,7 @@ class View implements ViewInterface {
 	 */
 	public function setContent(string $content): void {
 		if ($this->compiled) {
-			throw new ViewException("Attempt to alter view after compilation.");
+			throw new ViewException("Attempt to alter view after compilation.", ViewException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		// like the header above, $content might be a file or the
@@ -195,7 +195,7 @@ class View implements ViewInterface {
 	 */
 	public function setFooter(string $footer): void {
 		if ($this->compiled) {
-			throw new ViewException("Attempt to alter view after compilation.");
+			throw new ViewException("Attempt to alter view after compilation.", ViewException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		// like the header above, $footer might be a file or the
@@ -222,7 +222,7 @@ class View implements ViewInterface {
 		// require more work and so they can overwrite this method.
 		
 		if ($this->compiled) {
-			throw new ViewException("Attempt to recompile view.");
+			throw new ViewException("Attempt to recompile view.", ViewException::RECOMPILATION);
 		}
 		
 		// for the convenience of our programmers, we'll let more
