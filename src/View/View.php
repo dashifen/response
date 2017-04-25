@@ -38,15 +38,10 @@ class View implements ViewInterface {
 	 *
 	 * @param string $header
 	 * @param string $footer
-	 * @param string $content
 	 */
-	public function __construct(string $header, string $footer, string $content = "") {
+	public function __construct(string $header, string $footer) {
 		$this->setHeader($header);
 		$this->setFooter($footer);
-		
-		if (!empty($content)) {
-			$this->setContent($content);
-		}
 	}
 	
 	/**

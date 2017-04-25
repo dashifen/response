@@ -2,8 +2,8 @@
 
 namespace Dashifen\Response;
 
-use Dashifen\Response\View\ViewInterface;
 use Dashifen\Response\Factory\ResponseFactoryInterface;
+use Dashifen\Response\View\ViewInterface;
 use Psr\Http\Message\ResponseInterface as HttpResponseInterface;
 use Zend\Diactoros\Response\EmitterInterface;
 
@@ -12,7 +12,7 @@ use Zend\Diactoros\Response\EmitterInterface;
  *
  * @package Dashifen\Response
  */
-class Response implements ResponseInterface {
+abstract class AbstractResponse implements ResponseInterface {
 	/**
 	 * @var string $type
 	 */
@@ -364,4 +364,43 @@ class Response implements ResponseInterface {
 				return $this->responseFactory->newHtmlResponse($content, $statusCode);
 		}
 	}
+	
+	/**
+	 * displays a successful response
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	abstract public function handleSuccess(array $data = []): void;
+	
+	/**
+	 * displays an failed response but not one that produces an error.  e.g.,
+	 * a domain read action that doesn't get anything or an create that fails.
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	abstract public function handleFailure(array $data = []): void;
+	
+	/**
+	 * displays an erroneous response -- usually when catching an exception
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	abstract public function handleError(array $data = []): void;
+	
+	/**
+	 * displays a page-not-found (i.e. a HTTP 404 error)
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	abstract public function handleNotFound(array $data = []): void;
+	
+	
 }

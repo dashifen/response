@@ -86,4 +86,42 @@ interface ResponseInterface {
 	 * @return void
 	 */
 	public function send(): void;
+	
+	/**
+	 * displays a successful response
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	public function handleSuccess(array $data = []): void;
+	
+	/**
+	 * displays an failed response but not one that produces an error.  e.g.,
+	 * a domain read action that doesn't get anything or an create that fails.
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	public function handleFailure(array $data = []): void;
+	
+	/**
+	 * displays an erroneous response -- usually when catching an exception
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	public function handleError(array $data = []): void;
+	
+	/**
+	 * displays a page-not-found (i.e. a HTTP 404 error)
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 */
+	public function handleNotFound(array $data = []): void;
 }
+
