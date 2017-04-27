@@ -49,6 +49,11 @@ abstract class AbstractResponse implements ResponseInterface {
 	protected $responseFactory;
 	
 	/**
+	 * @var string $root_path
+	 */
+	protected $root_path = "";
+	
+	/**
 	 * @var bool $complete
 	 */
 	protected $compiled = false;
@@ -138,15 +143,28 @@ abstract class AbstractResponse implements ResponseInterface {
 	 * @param ViewInterface            $view
 	 * @param EmitterInterface         $emitter
 	 * @param ResponseFactoryInterface $responseFactory
+	 * @param string				   $root_path
 	 */
 	public function __construct(
 		ViewInterface $view,
 		EmitterInterface $emitter,
-		ResponseFactoryInterface $responseFactory
+		ResponseFactoryInterface $responseFactory,
+		string $root_path = ""
 	) {
 		$this->view = $view;
 		$this->emitter = $emitter;
 		$this->responseFactory = $responseFactory;
+		
+		// before we set our root path, if the final character of it is our
+		// directory separator, we want to remove it.  this is because our
+		// setContent method below will want to add it back in and we don't
+		// want there to be two in a row.
+		
+		if (!empty($root_path) && substr($root_path, -1, 1) === DIRECTORY_SEPARATOR) {
+			$root_path = substr($root_path, 0, strlen($root_path)-1);
+		}
+		
+		$this->root_path = $root_path;
 	}
 	
 	/**
@@ -258,6 +276,24 @@ abstract class AbstractResponse implements ResponseInterface {
 		}
 		
 		$this->view = $view;
+	}
+	
+	/**
+	 * passes content to our view
+	 *
+	 * @param string $content
+	 *
+	 * @return void
+	 */
+	public function setContent(string $content): void {
+		
+		// there's two options here:  that the concatenation of $this->root_path
+		// and $content is a file and we pass that to our view or that it isn't
+		// and we pass the $content argument to the view directly assuming that
+		// it's a string of content.
+		
+		$temp = $this->root_path . DIRECTORY_SEPARATOR . $content;
+		$this->view->setContent(is_file($temp) ? $temp : $content);
 	}
 	
 	/**
