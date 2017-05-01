@@ -167,9 +167,10 @@ abstract class AbstractResponse implements ResponseInterface {
 		$this->root_path = $root_path;
 		
 		// finally, until we're told otherwise, we're going to assume that
-		// we're sending an html response.  if we need to send another one,
-		// we can always call setType() from elsewhere.
+		// we're sending an html response and that it's successful.  if that
+		// has to change, we can always do so elsewhere.
 		
+		$this->setStatusCode(200);
 		$this->setType("html");
 	}
 	
