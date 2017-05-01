@@ -59,6 +59,11 @@ abstract class AbstractResponse implements ResponseInterface {
 	protected $compiled = false;
 	
 	/**
+	 * @var string $completenessError
+	 */
+	protected $completenessError = "";
+	
+	/**
 	 * Map of standard HTTP status code/reason phrases
 	 * Copied from Zend\Diactoros\Response\Response 2017-04-19
 	 *
@@ -332,7 +337,7 @@ abstract class AbstractResponse implements ResponseInterface {
 	 */
 	public function send(): void {
 		if (!$this->isComplete()) {
-			throw new ResponseException("Attempt to send incomplete response.", ResponseException::INCOMPLETE_COMPILATION);
+			throw new ResponseException("Attempt to send incomplete response: $this->completenessError.", ResponseException::INCOMPLETE_COMPILATION);
 		}
 		
 		// in a perfect world, the programmer would always compile
@@ -353,14 +358,27 @@ abstract class AbstractResponse implements ResponseInterface {
 	 * @return bool
 	 */
 	public function isComplete(): bool {
+		$this->completenessError = "";
 		
 		// before we do anything, we need to be sure that we
 		// have the following information: type, data, and view.
 		// without those, it's impossible for us to be complete.
 		
-		if (is_null($this->data) || is_null($this->type) || is_null($this->view)) {
+		if (is_null($this->data) || !is_array($this->data) || sizeof($this->data)===0) {
+			$this->completenessError = "invalid data";
 			return false;
 		}
+		
+		if (is_null($this->type)) {
+			$this->completenessError = "invalid type";
+			return false;
+		}
+		
+		if (is_null($this->view)) {
+			$this->completenessError = "invalid view";
+			return false;
+		}
+		
 		
 		if ($this->type !== "redirect") {
 			
@@ -377,14 +395,29 @@ abstract class AbstractResponse implements ResponseInterface {
 			// then we're not complete.  so, if the resulting $difference is
 			// zero, then we can return true.
 			
-			return sizeof($difference) === 0;
+			if (sizeof($difference) !== 0) {
+				$this->completenessError = "missing data";
+				return false;
+			}
 		}
 		
 		// if we're still executing this method, then we must be redirecting.
 		// in this case, the only data we need is a url.  if we have it, and if
 		// it appears to be valid, we'll be good to go.
 		
-		return isset($this->data["url"]) && filter_var($this->data["url"], FILTER_VALIDATE_URL);
+		if (!isset($this->data["url"])) {
+			$this->completenessError = "missing url";
+			return false;
+		}
+		
+		if (!filter_var($this->data["url"], FILTER_VALIDATE_URL)) {
+			$this->completenessError = "invalid url";
+			return false;
+		}
+		
+		// if
+		
+		return true;
 	}
 	
 	/**
@@ -397,7 +430,7 @@ abstract class AbstractResponse implements ResponseInterface {
 		}
 		
 		if (!$this->isComplete()) {
-			throw new ResponseException("Attempt to compile incomplete response.", ResponseException::AFTER_COMPILE_ALTERATION);
+			throw new ResponseException("Attempt to compile incomplete response: $this->completenessError.", ResponseException::AFTER_COMPILE_ALTERATION);
 		}
 		
 		$content = $this->type !== "redirect"
