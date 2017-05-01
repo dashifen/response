@@ -165,6 +165,12 @@ abstract class AbstractResponse implements ResponseInterface {
 		}
 		
 		$this->root_path = $root_path;
+		
+		// finally, until we're told otherwise, we're going to assume that
+		// we're sending an html response.  if we need to send another one,
+		// we can always call setType() from elsewhere.
+		
+		$this->setType("html");
 	}
 	
 	/**
@@ -351,7 +357,7 @@ abstract class AbstractResponse implements ResponseInterface {
 		// have the following information: type, data, and view.
 		// without those, it's impossible for us to be complete.
 		
-		if (sizeof($this->data) || is_null($this->type) || is_null($this->view)) {
+		if (is_null($this->data) || is_null($this->type) || is_null($this->view)) {
 			return false;
 		}
 		
