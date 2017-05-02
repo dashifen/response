@@ -103,14 +103,6 @@ class View implements ViewInterface {
 			return substr($match, 1);
 		}, array_unique($matches[0]));
 		
-		// there's always "content" as a prerequisite.  if it's not
-		// explicitly found within our content string, we'll add it
-		// now.
-		
-		if (!in_array("content", $prerequisites)) {
-			$prerequisites[] = "content";
-		}
-		
 		return $prerequisites;
 	}
 	

@@ -400,6 +400,12 @@ abstract class AbstractResponse implements ResponseInterface {
 				$this->completenessError = "missing data ($difference)";
 				return false;
 			}
+			
+			// if we didn't return false in the if-block above, then our
+			// response is complete.  we'll return true here to avoid testing
+			// the needs for a redirect response below.
+			
+			return true;
 		}
 		
 		// if we're still executing this method, then we must be redirecting.
@@ -415,8 +421,6 @@ abstract class AbstractResponse implements ResponseInterface {
 			$this->completenessError = "invalid url";
 			return false;
 		}
-		
-		// if
 		
 		return true;
 	}
