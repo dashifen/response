@@ -396,7 +396,8 @@ abstract class AbstractResponse implements ResponseInterface {
 			// zero, then we can return true.
 			
 			if (sizeof($difference) !== 0) {
-				$this->completenessError = "missing data";
+				$difference = join(", ", $difference);
+				$this->completenessError = "missing data ($difference)";
 				return false;
 			}
 		}
