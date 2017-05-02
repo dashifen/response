@@ -140,6 +140,15 @@ class View implements ViewInterface {
 	}
 	
 	/**
+	 * @param string $index
+	 *
+	 * @return bool
+	 */
+	public function has(string $index): bool {
+		return isset($this->data[$index]);
+	}
+	
+	/**
 	 * @param string $header
 	 *
 	 * @throws ViewException

@@ -45,6 +45,13 @@ interface ViewInterface {
 	public function setDatum(string $index, $datum): void;
 	
 	/**
+	 * @param string $index
+	 *
+	 * @return bool
+	 */
+	public function has(string $index): bool;
+	
+	/**
 	 * @param string $header
 	 *
 	 * @throws ViewException
