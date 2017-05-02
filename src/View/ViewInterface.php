@@ -8,7 +8,7 @@ namespace Dashifen\Response\View;
  * @package Dashifen\Response\View
  */
 interface ViewInterface {
-	public const pattern = '/(?<=\\$)(\w+)/';
+	public const pattern = '/\\$(\w+)/';
 	
 	/**
 	 * @param string $content

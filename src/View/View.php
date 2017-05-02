@@ -51,7 +51,7 @@ class View implements ViewInterface {
 	 *
 	 * @return string
 	 */
-	public static function compileTemplate(string $content, array $data, string $pattern = '/(?<=\\$)(\w+)/'): string {
+	public static function compileTemplate(string $content, array $data, string $pattern = ViewInterface::pattern): string {
 		
 		// this is a very, very simple template engine.  we made it
 		// static so that it could be used elsewhere in an application
@@ -71,9 +71,7 @@ class View implements ViewInterface {
 			// see if $data has an index without the dollar sign, then
 			// with, and if we find neither, we return an error.
 			
-			return $data[substr($matches[0], 1)]
-				?? $data[$matches[0]]
-				?? "#ERROR EXPECTING $matches[0]#";
+			return $data[$matches[1]] ?? "#ERROR EXPECTING $matches[1]#";
 			
 		}, $content);
 	}
