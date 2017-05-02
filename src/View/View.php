@@ -92,16 +92,14 @@ class View implements ViewInterface {
 		
 		preg_match_all($pattern, $this->content, $matches);
 		
-		// the $matches array contains all matches, even repetitious
-		// ones.  therefore, before we use array_map to remove the
-		// dollar sign that our pattern grabs within $matches, we'll
-		// pass our matches through array_unique().
+		// the $matches array should have two indices.  the first is the
+		// actual matched text which, by default, includes the dollar sign
+		// that identifies template variables.  but, the second index is
+		// the parenthetical match, which is the word following the dollar
+		// sign.  so, all we want to do is send back that array but without
+		// any duplicates as follows.
 		
-		$prerequisites = array_map(function($match) {
-			return substr($match, 1);
-		}, array_unique($matches[0]));
-		
-		return $prerequisites;
+		return array_unique($matches[1]);
 	}
 	
 	/**
