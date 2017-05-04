@@ -84,7 +84,7 @@ class View implements ViewInterface {
 	 */
 	public function getPrerequisites(string $pattern = ViewInterface::pattern): array {
 		
-		// by default, the $pattern for this method matches the one
+		//x by default, the $pattern for this method matches the one
 		// for the applyTemplate() method above, and both match the
 		// public constant from the ViewInterface.  you can change the
 		// pattern, but they'd better be the same, or you'll get funky
