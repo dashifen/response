@@ -476,39 +476,43 @@ abstract class AbstractResponse implements ResponseInterface {
 	/**
 	 * displays a successful response
 	 *
-	 * @param array $data
+	 * @param array  $data
+	 * @param string $action
 	 *
 	 * @return void
 	 */
-	abstract public function handleSuccess(array $data = []): void;
+	abstract public function handleSuccess(array $data = [], string $action = "read"): void;
 	
 	/**
 	 * displays an failed response but not one that produces an error.  e.g.,
 	 * a domain read action that doesn't get anything or an create that fails.
 	 *
-	 * @param array $data
+	 * @param array  $data
+	 * @param string $action
 	 *
 	 * @return void
 	 */
-	abstract public function handleFailure(array $data = []): void;
+	abstract public function handleFailure(array $data = [], string $action = "read"): void;
 	
 	/**
 	 * displays an erroneous response -- usually when catching an exception
 	 *
-	 * @param array $data
+	 * @param array  $data
+	 * @param string $action
 	 *
 	 * @return void
 	 */
-	abstract public function handleError(array $data = []): void;
+	abstract public function handleError(array $data = [], string $action = "read"): void;
 	
 	/**
 	 * displays a page-not-found (i.e. a HTTP 404 error)
 	 *
-	 * @param array $data
+	 * @param array  $data
+	 * @param string $action
 	 *
 	 * @return void
 	 */
-	abstract public function handleNotFound(array $data = []): void;
+	abstract public function handleNotFound(array $data = [], string $action = "read"): void;
 	
 	
 }
