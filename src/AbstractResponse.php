@@ -207,10 +207,32 @@ abstract class AbstractResponse implements ResponseInterface {
 	}
 	
 	/**
+	 * @param string $phrase
+	 *
 	 * @return int
 	 */
-	public function getStatusCode(): int {
-		return $this->statusCode;
+	public function getStatusCode(string $phrase = ""): int {
+		
+		// this function has sort of a dual role.  if $phrase is
+		// empty, we return the current status code.  otherwise, we
+		// return the code for the specified phrase.
+		
+		$code = $this->statusCode;
+		
+		if (!empty($phrase)) {
+			$code = array_search($phrase, $this->phrases);
+			
+			// array_search returns Boolean false when it can't find
+			// our $phrase within the list of phrases.  but, since this
+			// method must return an int, we'll fall back on returning
+			// -1 when we don't find our phrase.
+			
+			if ($code === false) {
+				$code = -1;
+			}
+		}
+		
+		return $code;
 	}
 	
 	/**

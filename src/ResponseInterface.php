@@ -24,9 +24,11 @@ interface ResponseInterface {
 	public function setType(string $type): void;
 	
 	/**
+	 * @param string $phrase
+	 *
 	 * @return int
 	 */
-	public function getStatusCode(): int;
+	public function getStatusCode(string $phrase = ""): int;
 	
 	/**
 	 * @param int $statusCode

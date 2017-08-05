@@ -2,9 +2,9 @@
 
 namespace Dashifen\Response;
 
-use Throwable;
+use Dashifen\Exception\Exception;
 
-class ResponseException extends \Exception {
+class ResponseException extends Exception {
 	public const AFTER_COMPILE_ALTERATION = 1;
 	public const INCOMPLETE_COMPILATION = 2;
 	public const UNKNOWN_RESPONSE_TYPE = 3;
@@ -12,13 +12,4 @@ class ResponseException extends \Exception {
 	public const RECOMPILATION = 5;
 	public const INVALID_URL = 6;
 	public const UNKNOWN_ERROR = 7;
-	
-	public function __construct($message = "", $code = 0, Throwable $previous = null) {
-		$reflection = new \ReflectionClass(__CLASS__);
-		if (!in_array($code, $reflection->getConstants())) {
-			$code = self::UNKNOWN_ERROR;
-		}
-		
-		parent::__construct($message, $code, $previous);
-	}
 }

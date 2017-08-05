@@ -18,6 +18,7 @@
 	},
 	"require": {
 		"php": "^7.1",
+		"dashifen/exception": "^1",
 		"zendframework/zend-diactoros": "^1.4"
 	},
 	"license": "MIT"
