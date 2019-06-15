@@ -32,13 +32,15 @@ class View implements ViewInterface {
 	 * @var bool compiled
 	 */
 	protected $compiled = false;
-	
-	/**
-	 * View constructor.
-	 *
-	 * @param string $header
-	 * @param string $footer
-	 */
+
+  /**
+   * View constructor.
+   *
+   * @param string $header
+   * @param string $footer
+   *
+   * @throws ViewException
+   */
 	public function __construct(string $header, string $footer) {
 		$this->setHeader($header);
 		$this->setFooter($footer);
@@ -75,13 +77,12 @@ class View implements ViewInterface {
 			
 		}, $content);
 	}
-	
-	/**
-	 * @param string $pattern
-	 *
-	 * @throws ViewException
-	 * @return array
-	 */
+
+  /**
+   * @param string $pattern
+   *
+   * @return array
+   */
 	public function getPrerequisites(string $pattern = ViewInterface::pattern): array {
 		
 		// by default, the $pattern for this method matches the one

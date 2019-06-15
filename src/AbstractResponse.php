@@ -3,6 +3,7 @@
 namespace Dashifen\Response;
 
 use Dashifen\Response\Factory\ResponseFactoryInterface;
+use Dashifen\Response\View\ViewException;
 use Dashifen\Response\View\ViewInterface;
 use Psr\Http\Message\ResponseInterface as HttpResponseInterface;
 use Zend\Diactoros\Response\EmitterInterface;
@@ -49,9 +50,9 @@ abstract class AbstractResponse implements ResponseInterface {
 	protected $responseFactory;
 	
 	/**
-	 * @var string $root_path
+	 * @var string $rootPath
 	 */
-	protected $root_path = "";
+	protected $rootPath = "";
 	
 	/**
 	 * @var bool $complete
@@ -65,96 +66,101 @@ abstract class AbstractResponse implements ResponseInterface {
 	
 	/**
 	 * Map of standard HTTP status code/reason phrases
-	 * Copied from Zend\Diactoros\Response\Response 2017-04-19
+	 * Copied from Zend\Diactoros\Response\Response 2019-06-15.
+   * It's private in that object, too, so we "move" it here
+   * like this.
 	 *
 	 * @var array
 	 */
-	private $phrases = [
-		// INFORMATIONAL CODES
-		100 => 'Continue',
-		101 => 'Switching Protocols',
-		102 => 'Processing',
-		// SUCCESS CODES
-		200 => 'OK',
-		201 => 'Created',
-		202 => 'Accepted',
-		203 => 'Non-Authoritative Information',
-		204 => 'No Content',
-		205 => 'Reset Content',
-		206 => 'Partial Content',
-		207 => 'Multi-Status',
-		208 => 'Already Reported',
-		226 => 'IM Used',
-		// REDIRECTION CODES
-		300 => 'Multiple Choices',
-		301 => 'Moved Permanently',
-		302 => 'Found',
-		303 => 'See Other',
-		304 => 'Not Modified',
-		305 => 'Use Proxy',
-		306 => 'Switch Proxy', // Deprecated to 306 => '(Unused)'
-		307 => 'Temporary Redirect',
-		308 => 'Permanent Redirect',
-		// CLIENT ERROR
-		400 => 'Bad Request',
-		401 => 'Unauthorized',
-		402 => 'Payment Required',
-		403 => 'Forbidden',
-		404 => 'Not Found',
-		405 => 'Method Not Allowed',
-		406 => 'Not Acceptable',
-		407 => 'Proxy Authentication Required',
-		408 => 'Request Timeout',
-		409 => 'Conflict',
-		410 => 'Gone',
-		411 => 'Length Required',
-		412 => 'Precondition Failed',
-		413 => 'Payload Too Large',
-		414 => 'URI Too Long',
-		415 => 'Unsupported Media Type',
-		416 => 'Range Not Satisfiable',
-		417 => 'Expectation Failed',
-		418 => 'I\'m a teapot',
-		421 => 'Misdirected Request',
-		422 => 'Unprocessable Entity',
-		423 => 'Locked',
-		424 => 'Failed Dependency',
-		425 => 'Unordered Collection',
-		426 => 'Upgrade Required',
-		428 => 'Precondition Required',
-		429 => 'Too Many Requests',
-		431 => 'Request Header Fields Too Large',
-		444 => 'Connection Closed Without Response',
-		451 => 'Unavailable For Legal Reasons',
-		// SERVER ERROR
-		499 => 'Client Closed Request',
-		500 => 'Internal Server Error',
-		501 => 'Not Implemented',
-		502 => 'Bad Gateway',
-		503 => 'Service Unavailable',
-		504 => 'Gateway Timeout',
-		505 => 'HTTP Version Not Supported',
-		506 => 'Variant Also Negotiates',
-		507 => 'Insufficient Storage',
-		508 => 'Loop Detected',
-		510 => 'Not Extended',
-		511 => 'Network Authentication Required',
-		599 => 'Network Connect Timeout Error',
-	];
-	
-	/**
-	 * Response constructor.
-	 *
-	 * @param ViewInterface            $view
-	 * @param EmitterInterface         $emitter
-	 * @param ResponseFactoryInterface $responseFactory
-	 * @param string				   $root_path
-	 */
+  private $phrases = [
+    // INFORMATIONAL CODES
+    100 => 'Continue',
+    101 => 'Switching Protocols',
+    102 => 'Processing',
+    103 => 'Early Hints',
+    // SUCCESS CODES
+    200 => 'OK',
+    201 => 'Created',
+    202 => 'Accepted',
+    203 => 'Non-Authoritative Information',
+    204 => 'No Content',
+    205 => 'Reset Content',
+    206 => 'Partial Content',
+    207 => 'Multi-Status',
+    208 => 'Already Reported',
+    226 => 'IM Used',
+    // REDIRECTION CODES
+    300 => 'Multiple Choices',
+    301 => 'Moved Permanently',
+    302 => 'Found',
+    303 => 'See Other',
+    304 => 'Not Modified',
+    305 => 'Use Proxy',
+    306 => 'Switch Proxy', // Deprecated to 306 => '(Unused)'
+    307 => 'Temporary Redirect',
+    308 => 'Permanent Redirect',
+    // CLIENT ERROR
+    400 => 'Bad Request',
+    401 => 'Unauthorized',
+    402 => 'Payment Required',
+    403 => 'Forbidden',
+    404 => 'Not Found',
+    405 => 'Method Not Allowed',
+    406 => 'Not Acceptable',
+    407 => 'Proxy Authentication Required',
+    408 => 'Request Timeout',
+    409 => 'Conflict',
+    410 => 'Gone',
+    411 => 'Length Required',
+    412 => 'Precondition Failed',
+    413 => 'Payload Too Large',
+    414 => 'URI Too Long',
+    415 => 'Unsupported Media Type',
+    416 => 'Range Not Satisfiable',
+    417 => 'Expectation Failed',
+    418 => 'I\'m a teapot',
+    421 => 'Misdirected Request',
+    422 => 'Unprocessable Entity',
+    423 => 'Locked',
+    424 => 'Failed Dependency',
+    425 => 'Too Early',
+    426 => 'Upgrade Required',
+    428 => 'Precondition Required',
+    429 => 'Too Many Requests',
+    431 => 'Request Header Fields Too Large',
+    444 => 'Connection Closed Without Response',
+    451 => 'Unavailable For Legal Reasons',
+    // SERVER ERROR
+    499 => 'Client Closed Request',
+    500 => 'Internal Server Error',
+    501 => 'Not Implemented',
+    502 => 'Bad Gateway',
+    503 => 'Service Unavailable',
+    504 => 'Gateway Timeout',
+    505 => 'HTTP Version Not Supported',
+    506 => 'Variant Also Negotiates',
+    507 => 'Insufficient Storage',
+    508 => 'Loop Detected',
+    510 => 'Not Extended',
+    511 => 'Network Authentication Required',
+    599 => 'Network Connect Timeout Error',
+  ];
+
+  /**
+   * Response constructor.
+   *
+   * @param ViewInterface            $view
+   * @param EmitterInterface         $emitter
+   * @param ResponseFactoryInterface $responseFactory
+   * @param string                   $rootPath
+   *
+   * @throws ResponseException
+   */
 	public function __construct(
 		ViewInterface $view,
 		EmitterInterface $emitter,
 		ResponseFactoryInterface $responseFactory,
-		string $root_path = ""
+		string $rootPath = ""
 	) {
 		$this->view = $view;
 		$this->emitter = $emitter;
@@ -165,11 +171,11 @@ abstract class AbstractResponse implements ResponseInterface {
 		// setContent method below will want to add it back in and we don't
 		// want there to be two in a row.
 		
-		if (!empty($root_path) && substr($root_path, -1, 1) === DIRECTORY_SEPARATOR) {
-			$root_path = substr($root_path, 0, strlen($root_path)-1);
+		if (!empty($rootPath) && substr($rootPath, -1, 1) === DIRECTORY_SEPARATOR) {
+			$rootPath = substr($rootPath, 0, strlen($rootPath)-1);
 		}
 		
-		$this->root_path = $root_path;
+		$this->rootPath = $rootPath;
 		
 		// finally, until we're told otherwise, we're going to assume that
 		// we're sending an html response and that it's successful.  if that
@@ -311,14 +317,16 @@ abstract class AbstractResponse implements ResponseInterface {
 		
 		$this->view = $view;
 	}
-	
-	/**
-	 * passes content to our view
-	 *
-	 * @param string $content
-	 *
-	 * @return void
-	 */
+
+  /**
+   * passes content to our view
+   *
+   * @param string $content
+   *
+   * @return void
+   *
+   * @throws ViewException
+   */
 	public function setContent(string $content): void {
 		
 		// there's two options here:  that the concatenation of $this->root_path
@@ -326,7 +334,7 @@ abstract class AbstractResponse implements ResponseInterface {
 		// and we pass the $content argument to the view directly assuming that
 		// it's a string of content.
 		
-		$temp = $this->root_path . DIRECTORY_SEPARATOR . $content;
+		$temp = $this->rootPath . DIRECTORY_SEPARATOR . $content;
 		$this->view->setContent(is_file($temp) ? $temp : $content);
 	}
 	
@@ -347,16 +355,25 @@ abstract class AbstractResponse implements ResponseInterface {
 	}
 	
 	/**
+   * isCompiled
+   *
+   * Returns the state of the compiled property
+   *
 	 * @return bool
 	 */
 	public function isCompiled(): bool {
 		return $this->compiled;
 	}
-	
-	/**
-	 * @throws ResponseException
-	 * @return void
-	 */
+
+  /**
+   * send
+   *
+   * Compiles, if necessary, and emits our response.
+   *
+   * @return void
+   * @throws ViewException
+   * @throws ResponseException
+   */
 	public function send(): void {
 		if (!$this->isComplete()) {
 			throw new ResponseException("Attempt to send incomplete response: $this->completenessError.", ResponseException::INCOMPLETE_COMPILATION);
@@ -375,10 +392,18 @@ abstract class AbstractResponse implements ResponseInterface {
 		
 		$this->emitter->emit($this->response);
 	}
-	
-	/**
-	 * @return bool
-	 */
+
+  /**
+   * isComplete
+   *
+   * Determining the completeness of our response is tough, but this method
+   * can handle it.  it checks for basic errors (missing data, etc.) but
+   * also tries to ensure that any pre-requisites in our view have been met
+   * as well.
+   *
+   * @return bool
+   * @throws ViewException
+   */
 	public function isComplete(): bool {
 		$this->completenessError = "";
 		
@@ -446,11 +471,17 @@ abstract class AbstractResponse implements ResponseInterface {
 		
 		return true;
 	}
-	
-	/**
-	 * @throws ResponseException
-	 * @return void
-	 */
+
+  /**
+   * compile
+   *
+   * Uses the data we've collected and the specified template to compile the
+   * view for this response.
+   *
+   * @return void
+   * @throws ResponseException
+   * @throws ViewException
+   */
 	public function compile(): void {
 		if ($this->compiled) {
 			throw new ResponseException("Attempt to recompile response.", ResponseException::RECOMPILATION);
@@ -469,6 +500,11 @@ abstract class AbstractResponse implements ResponseInterface {
 	}
 	
 	/**
+   * newResponse
+   *
+   * Uses our response factory to generate a new response of the appropriate
+   * type and returns it to the calling scope.
+   *
 	 * @param string $content
 	 * @param int    $statusCode
 	 *
@@ -496,7 +532,9 @@ abstract class AbstractResponse implements ResponseInterface {
 	}
 	
 	/**
-	 * displays a successful response
+   * handleSuccess
+   *
+	 * Displays a successful response
 	 *
 	 * @param array  $data
 	 * @param string $action
@@ -506,7 +544,9 @@ abstract class AbstractResponse implements ResponseInterface {
 	abstract public function handleSuccess(array $data = [], string $action = "read"): void;
 	
 	/**
-	 * displays an failed response but not one that produces an error.  e.g.,
+   * handleFailure
+   *
+	 * Displays an failed response but not one that produces an error.  e.g.,
 	 * a domain read action that doesn't get anything or an create that fails.
 	 *
 	 * @param array  $data
@@ -517,7 +557,9 @@ abstract class AbstractResponse implements ResponseInterface {
 	abstract public function handleFailure(array $data = [], string $action = "read"): void;
 	
 	/**
-	 * displays an erroneous response -- usually when catching an exception
+   * handleError
+   *
+	 * Displays an erroneous response -- usually when catching an exception
 	 *
 	 * @param array  $data
 	 * @param string $action
@@ -527,7 +569,9 @@ abstract class AbstractResponse implements ResponseInterface {
 	abstract public function handleError(array $data = [], string $action = "read"): void;
 	
 	/**
-	 * displays a page-not-found (i.e. a HTTP 404 error)
+   * handleNotFound
+   *
+	 * Displays a page-not-found (i.e. a HTTP 404 error)
 	 *
 	 * @param array  $data
 	 * @param string $action
