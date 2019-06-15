@@ -19,7 +19,8 @@
 	"require": {
 		"php": "7.3.*",
 		"dashifen/exception": "1.1.*",
-		"zendframework/zend-diactoros": "2.1.*"
+		"zendframework/zend-diactoros": "2.1.*",
+		"zendframework/zend-httphandlerrunner": "1.0.*"
 	},
 	"license": "MIT"
 }

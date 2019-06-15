@@ -6,7 +6,7 @@ use Dashifen\Response\Factory\ResponseFactoryInterface;
 use Dashifen\Response\View\ViewException;
 use Dashifen\Response\View\ViewInterface;
 use Psr\Http\Message\ResponseInterface as HttpResponseInterface;
-use Zend\Diactoros\Response\EmitterInterface;
+use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 
 /**
  * Class Response
