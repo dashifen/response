@@ -215,9 +215,9 @@ abstract class AbstractResponse implements ResponseInterface {
 	/**
 	 * @param string $phrase
 	 *
-	 * @return int
+	 * @return int|null
 	 */
-	public function getStatusCode(string $phrase = ""): int {
+	public function getStatusCode(string $phrase = ""): ?int {
 		
 		// this function has sort of a dual role.  if $phrase is
 		// empty, we return the current status code.  otherwise, we
@@ -234,7 +234,7 @@ abstract class AbstractResponse implements ResponseInterface {
 			// -1 when we don't find our phrase.
 			
 			if ($code === false) {
-				$code = -1;
+				$code = null;
 			}
 		}
 		
@@ -270,16 +270,14 @@ abstract class AbstractResponse implements ResponseInterface {
 			throw new ResponseException("Attempt to alter response after compilation.", ResponseException::AFTER_COMPILE_ALTERATION);
 		}
 		
-		// it might appear, at first, that we could simply set
-		// $this->data to $data and call it a day.  but, that would
-		// overwrite anything that had also been set by setDatum()
-		// below.  therefore, we'll perform a more careful assignment
-		// here.
+		// it might appear, at first, that we could simply set $this->data to
+    // $data and call it a day.  but, that would remove anything that had
+    // also been set by setDatum() that isn't in this array.  therefore,
+    // we'll perform a more careful assignment here.
 		
 		foreach ($data as $index => $datum) {
 			$this->setDatum($index, $datum);
 		}
-		
 	}
 	
 	/**
@@ -536,12 +534,9 @@ abstract class AbstractResponse implements ResponseInterface {
    *
 	 * Displays a successful response
 	 *
-	 * @param array  $data
-	 * @param string $action
-	 *
 	 * @return void
 	 */
-	abstract public function handleSuccess(array $data = [], string $action = "read"): void;
+	abstract public function handleSuccess(): void;
 	
 	/**
    * handleFailure
@@ -549,36 +544,25 @@ abstract class AbstractResponse implements ResponseInterface {
 	 * Displays an failed response but not one that produces an error.  e.g.,
 	 * a domain read action that doesn't get anything or an create that fails.
 	 *
-	 * @param array  $data
-	 * @param string $action
-	 *
 	 * @return void
 	 */
-	abstract public function handleFailure(array $data = [], string $action = "read"): void;
+	abstract public function handleFailure(): void;
 	
 	/**
    * handleError
    *
 	 * Displays an erroneous response -- usually when catching an exception
 	 *
-	 * @param array  $data
-	 * @param string $action
-	 *
 	 * @return void
 	 */
-	abstract public function handleError(array $data = [], string $action = "read"): void;
+	abstract public function handleError(): void;
 	
 	/**
    * handleNotFound
    *
 	 * Displays a page-not-found (i.e. a HTTP 404 error)
 	 *
-	 * @param array  $data
-	 * @param string $action
-	 *
 	 * @return void
 	 */
-	abstract public function handleNotFound(array $data = [], string $action = "read"): void;
-	
-	
+	abstract public function handleNotFound(): void;
 }

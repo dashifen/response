@@ -26,9 +26,9 @@ interface ResponseInterface {
 	/**
 	 * @param string $phrase
 	 *
-	 * @return int
+	 * @return int|null
 	 */
-	public function getStatusCode(string $phrase = ""): int;
+	public function getStatusCode(string $phrase = ""): ?int;
 	
 	/**
 	 * @param int $statusCode
@@ -109,42 +109,30 @@ interface ResponseInterface {
 	/**
 	 * displays a successful response
 	 *
-	 * @param array  $data
-	 * @param string $action
-	 *
 	 * @return void
 	 */
-	public function handleSuccess(array $data = [], string $action = "read"): void;
+	public function handleSuccess(): void;
 	
 	/**
 	 * displays an failed response but not one that produces an error.  e.g.,
 	 * a domain read action that doesn't get anything or an create that fails.
 	 *
-	 * @param array  $data
-	 * @param string $action
-	 *
 	 * @return void
 	 */
-	public function handleFailure(array $data = [], string $action = "read"): void;
+	public function handleFailure(): void;
 	
 	/**
 	 * displays an erroneous response -- usually when catching an exception
 	 *
-	 * @param array  $data
-	 * @param string $action
-	 *
 	 * @return void
 	 */
-	public function handleError(array $data = [], string $action = "read"): void;
+	public function handleError(): void;
 	
 	/**
 	 * displays a page-not-found (i.e. a HTTP 404 error)
 	 *
-	 * @param array  $data
-	 * @param string $action
-	 *
 	 * @return void
 	 */
-	public function handleNotFound(array $data = [], string $action = "read"): void;
+	public function handleNotFound(): void;
 }
 
