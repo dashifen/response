@@ -22,5 +22,5 @@
 		"zendframework/zend-diactoros": "2.1.*",
 		"zendframework/zend-httphandlerrunner": "1.0.*"
 	},
-	"license": "The Hippocratic License"
+	"license": "MIT"
 }
