@@ -4,24 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ea4f289dbad0ac78ecc86f9ae2af939",
+    "content-hash": "d40c70b2336b58976b1b2b493fe23032",
     "packages": [
         {
             "name": "dashifen/exception",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dashifen/exception.git",
-                "reference": "7e388534a73e8021bf4cc49e8656fa42497da212"
+                "reference": "c900fdd58f4b50562810b9930d1f5c52b64da28b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dashifen/exception/zipball/7e388534a73e8021bf4cc49e8656fa42497da212",
-                "reference": "7e388534a73e8021bf4cc49e8656fa42497da212",
+                "url": "https://api.github.com/repos/dashifen/exception/zipball/c900fdd58f4b50562810b9930d1f5c52b64da28b",
+                "reference": "c900fdd58f4b50562810b9930d1f5c52b64da28b",
                 "shasum": ""
             },
             "require": {
-                "php": "7.3.*"
+                "php": ">=7.3"
             },
             "type": "library",
             "autoload": {
@@ -42,7 +42,7 @@
                 }
             ],
             "description": "a base class for exceptions in Dashifen's other work",
-            "time": "2019-06-15T02:55:25+00:00"
+            "time": "2019-11-30T20:08:44+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -201,16 +201,16 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "2.1.2",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "37bf68b428850ee26ed7c3be6c26236dd95a95f1"
+                "reference": "de5847b068362a88684a55b0dbb40d85986cfa52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/37bf68b428850ee26ed7c3be6c26236dd95a95f1",
-                "reference": "37bf68b428850ee26ed7c3be6c26236dd95a95f1",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/de5847b068362a88684a55b0dbb40d85986cfa52",
+                "reference": "de5847b068362a88684a55b0dbb40d85986cfa52",
                 "shasum": ""
             },
             "require": {
@@ -223,6 +223,7 @@
                 "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
+                "ext-curl": "*",
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "http-interop/http-factory-tests": "^0.5.0",
@@ -263,7 +264,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2019-04-29T21:11:00+00:00"
+            "time": "2019-11-13T19:16:13+00:00"
         },
         {
             "name": "zendframework/zend-httphandlerrunner",
@@ -328,7 +329,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "7.3.*"
+        "php": ">=7.3"
     },
     "platform-dev": []
 }
